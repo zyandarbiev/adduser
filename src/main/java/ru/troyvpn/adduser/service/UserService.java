@@ -45,14 +45,14 @@ public class UserService {
             Files.write(path, filteredLines, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
 
         } catch (IOException e) {
-            return "Ошибка при удалении файла";
+            return "Ошибка при удалении пользователя";
         }
         return "Пользователь удален";
     }
 
     private void backupFile(String filePath) throws IOException {
         Path sourcePath = Paths.get(filePath);
-        Path backupPath = Paths.get(filePath + ".bak");
+        Path backupPath = Paths.get("/home/zelim/backup/ipsec.conf" + ".bak");
 
         // Копируем файл в резервный файл
         Files.copy(sourcePath, backupPath, StandardCopyOption.REPLACE_EXISTING);
