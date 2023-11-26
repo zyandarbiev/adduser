@@ -27,14 +27,14 @@ public class UserService {
     }
 
     public String getPasswordByUsername(String username) {
-        Path path = Paths.get("/etc/ipsec.conf");
+        Path path = Paths.get("/etc/ipsec.secrets");
         try {
             // Читаем все строки из файла
             List<String> lines = Files.readAllLines(path);
 
             // Ищем строку, содержащую указанное имя пользователя
             for (String line : lines) {
-                if (line.contains(username) && line.contains("EAP")) {
+                if (line.contains(username)) {
                     int startIndex = line.indexOf("\"");
                     int endIndex = line.lastIndexOf("\"");
                     if (startIndex != -1 && endIndex != -1 && startIndex < endIndex) {
