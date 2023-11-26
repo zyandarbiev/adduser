@@ -23,8 +23,31 @@ public class UserService {
         } catch (IOException e) {
             return "Ошибка при записи";
         }
-        return "IpsecSecret added successfully";
+        return password;
+    }
 
+    public String getPasswordByUsername(String username) {
+        Path path = Paths.get("/etc/ipsec.conf");
+        try {
+            // Читаем все строки из файла
+            List<String> lines = Files.readAllLines(path);
+
+            // Ищем строку, содержащую указанное имя пользователя
+            for (String line : lines) {
+                if (line.contains(username) && line.contains("EAP")) {
+                    int startIndex = line.indexOf("\"");
+                    int endIndex = line.lastIndexOf("\"");
+                    if (startIndex != -1 && endIndex != -1 && startIndex < endIndex) {
+                        return line.substring(startIndex + 1, endIndex);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        // Возвращаем null, если пользователь не найден или пароль не может быть извлечен
+        return null;
     }
 
     public String removeUser(String username) {

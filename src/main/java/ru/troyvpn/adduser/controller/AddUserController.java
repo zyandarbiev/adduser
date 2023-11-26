@@ -25,5 +25,11 @@ public class AddUserController {
         return ResponseEntity.ok(res);
     }
 
+    @GetMapping("getPass/{username}")
+    private ResponseEntity<String> getPasswordByUsername(@PathVariable String username) {
+        String pw = userService.getPasswordByUsername(username);
+        return ResponseEntity.ok(pw);
+    }
+
 
 }
