@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.nio.file.*;
 import java.security.SecureRandom;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,21 +27,22 @@ public class UserService {
         }
         return password;
     }
-
     public String getPasswordByUsername(String username) {
         Path path = Paths.get("/etc/ipsec.secrets");
+
+        // Читаем все строки из файла
         try {
-            // Читаем все строки из файла
             List<String> lines = Files.readAllLines(path);
 
-            // Ищем строку, содержащую указанное имя пользователя
+            // Создаем регулярное выражение для поиска пароля в строке
+            String regex = "\\b" + username + "\\s*:\\s*EAP\\s*\"(.*?)\"";
+            Pattern pattern = Pattern.compile(regex);
+
+            // Ищем соответствие регулярному выражению в каждой строке
             for (String line : lines) {
-                if (line.contains(username)) {
-                    int startIndex = line.indexOf("\"");
-                    int endIndex = line.lastIndexOf("\"");
-                    if (startIndex != -1 && endIndex != -1 && startIndex < endIndex) {
-                        return line.substring(startIndex + 1, endIndex);
-                    }
+                Matcher matcher = pattern.matcher(line);
+                if (matcher.find()) {
+                    return matcher.group(1);
                 }
             }
         } catch (IOException e) {
@@ -49,6 +52,29 @@ public class UserService {
         // Возвращаем null, если пользователь не найден или пароль не может быть извлечен
         return null;
     }
+//    public String getPasswordByUsername(String username) {
+//        Path path = Paths.get("/etc/ipsec.secrets");
+//        try {
+//            // Читаем все строки из файла
+//            List<String> lines = Files.readAllLines(path);
+//
+//            // Ищем строку, содержащую указанное имя пользователя
+//            for (String line : lines) {
+//                if (line.contains(username)) {
+//                    int startIndex = line.indexOf("\"");
+//                    int endIndex = line.lastIndexOf("\"");
+//                    if (startIndex != -1 && endIndex != -1 && startIndex < endIndex) {
+//                        return line.substring(startIndex + 1, endIndex);
+//                    }
+//                }
+//            }
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//
+//        // Возвращаем null, если пользователь не найден или пароль не может быть извлечен
+//        return null;
+//    }
 
     public String removeUser(String username) {
         String filePath = "/etc/ipsec.secrets";
