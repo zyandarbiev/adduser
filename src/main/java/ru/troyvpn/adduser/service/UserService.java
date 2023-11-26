@@ -45,7 +45,7 @@ public class UserService {
             Files.write(path, filteredLines, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
 
         } catch (IOException e) {
-            return "Ошибка при удалении пользователя";
+            throw new RuntimeException(e);
         }
         return "Пользователь удален";
     }
