@@ -1,10 +1,7 @@
 package ru.troyvpn.adduser.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.troyvpn.adduser.service.AddUserService;
 
 @RestController
@@ -16,7 +13,7 @@ public class AddUserController {
         this.addUserService = addUserService;
     }
 
-    @PostMapping("/{username}")
+    @GetMapping("/{username}")
     private ResponseEntity<String> addUser(@PathVariable String username) {
         String res = addUserService.addUser(username);
         return ResponseEntity.ok(res);
